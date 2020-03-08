@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Remember the Bread</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        .tasks-list li {
+            margin: 0px;
+            padding: 4px 10px;
+            list-style: none;
+        }
+        .tasks-list li:hover {
+            cursor: pointer;
+            border-radius: 4px;
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="offset-by-three six columns">
+                <h1>Remember the Bread</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="offset-by-three six columns">
+                <input id="task" type="text" placeholder="Ej.: comprar pan" class="u-full-width">
+            </div>
+        </div>
+        <div class="row">
+            <div class="offset-by-three six columns">
+                <ul id="tasks" class="tasks-list"></ul>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        // Once the document is loaded.
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // The task title (<input>) and the tasks collection (<ul>) elements.
+            const taskInput = document.querySelector('#task')
+            const tasksList = document.querySelector('#tasks')
+
+            // List the tasks collection.
+            function listTasks() {
+                return new Promise(resolve => {
+                    // Call the backend API.
+                    fetch(`//${window.location.host}/api/tasks`)
+                        .then(response => {
+                            // If the server response is wrong.
+                            if (!response.ok || response.status !== 200) {
+                                console.error(`listTasks error | status ${res.status}`)
+                            }
+                            return response.json()
+                        })
+                        .then(tasks => resolve(tasks))
+                        .catch(error => console.error(error.message))
+                })
+            }
+
+            // Create the given task.
+            function createTask(task) {
+                const config = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(task)
+                }
+                return new Promise(resolve => {
+                    // Call the backend API.
+                    fetch(`//${window.location.host}/api/tasks`, config)
+                        .then(response => {
+                            // If the server response is wrong.
+                            if (!response.ok || response.status !== 201) {
+                                console.error(`createTask error | status ${res.status}`)
+                            }
+                            return response.json()
+                        })
+                        .then(task => resolve(task))
+                        .catch(error => console.error(error.message))
+                })
+            }
+
+            // Delete the given task.
+            function deleteTask(id) {
+                const config = {
+                    method: 'DELETE'
+                }
+                return new Promise(resolve => {
+                    // Call the backend API.
+                    fetch(`//${window.location.host}/api/tasks/${id}`, config)
+                        .then(response => {
+                            // If the server response is wrong.
+                            if (!response.ok || response.status !== 204) {
+                                console.error(`deleteTask error | status ${res.status}`)
+                            }
+                            resolve()
+                        })
+                        .catch(error => console.error(error.message))
+                })
+            }
+
+            // Handles the tasks's click events.
+            function onTaskClick(e) {
+                const id = +e.target.getAttribute('data-id')
+                deleteTask(id).then(() => e.target.remove())
+            }
+
+            // Add the given task to the list.
+            function appendTask(task, ontop) {
+                // Create the <li> element and set some attributes on it.
+                const li = document.createElement('li')
+                li.innerText = task.title
+                li.setAttribute('data-id', task.id)
+                li.addEventListener('click', onTaskClick)
+                // Add the element to its <ul> parent.
+                tasksList[ontop === true ? 'prepend' : 'appendChild'](li)
+            }
+
+            // Handle the keyup events in the task title's input.
+            taskInput.addEventListener('keyup', e => {
+                // If the pressed key is enter and the task title is set.
+                if ((e.which || e.keyCode) === 13 && taskInput.value !== '') {
+                    // Disable the input.
+                    taskInput.setAttribute('disabled', 'disabled')
+                    // Create the task.
+                    createTask({
+                        title: taskInput.value,
+                        cdate: Date.now()
+                    }).then(task => {
+                        // Insert the new task at the beginning the list.
+                        appendTask(task, true)
+                        // Enable the input and focus it.
+                        taskInput.value = ''
+                        taskInput.removeAttribute('disabled')
+                        taskInput.focus()
+                    })
+                }
+            })
+
+            // Push the tasks collection one by one to the list.
+            listTasks().then(tasks => tasks.forEach(task => appendTask(task)))
+        })
+
+    </script>
+</body>
+</html>
