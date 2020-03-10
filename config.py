@@ -1,29 +1,34 @@
 import logging
+import base64
 import boto3
+import json
 import os
 import sys
 from botocore.exceptions import ClientError
 
+SECRETS_MANAGER_NAME = 'rtb-db-secret'
 
-def _get_parameter(client, name):
+
+def get_secret(secret_name):
+
+    session = boto3.session.Session()
+    client = session.client(service_name='secretsmanager')
+
     try:
-        r = client.get_parameter(Name=name)
+        response = client.get_secret_value(SecretId=secret_name)
     except ClientError as e:
-        logging.error(f'Error trying to get the parameter {name}')
+        logging.error(f'Error trying to get the secret {secret_name}')
         logging.error(e.response['Error']['Code'])
         sys.exit(1)
-    return r['Parameter']['Value']
-
-
-_ssm = boto3.client('ssm')
-_user = _get_parameter(_ssm, 'MYSQL_USER')
-_pass = _get_parameter(_ssm, 'MYSQL_PASSWORD')
-_host = _get_parameter(_ssm, 'MYSQL_HOST')
-_ddbb = _get_parameter(_ssm, 'MYSQL_DB')
+    else:
+        value = response['SecretString'] \
+            if 'SecretString' in response \
+            else base64.b64decode(response['SecretBinary'])
+    return json.loads(value)
 
 
 class Config:
     ENV = os.environ.get('FLASK_ENV') or 'development'
     DEBUG = os.environ.get('FLASK_DEBUG') or False
-    SQLALCHEMY_DATABASE_URI = f'mysql://{_user}:{_pass}@{_host}/{_ddbb}'
+    SQLALCHEMY_DATABASE_URI = 'mysql://{username}:{password}@{host}/{db}'.format(**get_secret(SECRETS_MANAGER_NAME))
     SQLALCHEMY_TRACK_MODIFICATIONS = False
