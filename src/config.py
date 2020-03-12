@@ -6,8 +6,8 @@ import os
 import sys
 from botocore.exceptions import ClientError
 
-REGION_NAME = 'eu-west-1'
-SECRET_NAME = 'rtb-db-secret'
+REGION_NAME = os.getenv('REGION_NAME')
+SECRET_NAME = os.getenv('SECRET_NAME')
 
 
 def get_secret(secret_name):
@@ -32,7 +32,5 @@ def get_secret(secret_name):
 
 
 class Config:
-    ENV = os.environ.get('FLASK_ENV') or 'development'
-    DEBUG = os.environ.get('FLASK_DEBUG') or False
     SQLALCHEMY_DATABASE_URI = 'mysql://{username}:{password}@{host}/{db}'.format(**get_secret(SECRET_NAME))
     SQLALCHEMY_TRACK_MODIFICATIONS = False
