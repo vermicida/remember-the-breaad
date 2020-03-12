@@ -1,8 +1,8 @@
 from datetime import datetime
 from flask import Blueprint, request
 from json import loads
-from src.models import db, Task, TaskSchema
-from src.tasks import create_response
+from app.models import db, Task, TaskSchema
+from app.tasks import create_response
 
 tasks_bp = Blueprint('tasks_bp', __name__)
 

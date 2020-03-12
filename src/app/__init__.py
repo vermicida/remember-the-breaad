@@ -19,8 +19,8 @@ def create_app():
     with app.app_context():
 
         # Register the blueprints.
-        from src.landing.routes import landing_bp
-        from src.tasks.routes import tasks_bp
+        from app.landing.routes import landing_bp
+        from app.tasks.routes import tasks_bp
         app.register_blueprint(landing_bp)
         app.register_blueprint(tasks_bp, url_prefix='/api/tasks')
 
