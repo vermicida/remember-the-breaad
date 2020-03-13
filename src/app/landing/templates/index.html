@@ -66,7 +66,7 @@
                             if (!response.ok || response.status !== 200) {
                                 console.error(`getInstancePublicIp error | status ${res.status}`)
                             }
-                            return response.text()
+                            return response.json()
                         })
                         .then(ipv4 => resolve(ipv4))
                         .catch(error => console.error(error.message))
@@ -170,7 +170,7 @@
             })
 
             // Print the instance public IP.
-            getIPv4().then(ipv4 => ipv4Small.innerHTML = ipv4)
+            getIPv4().then(ipv4 => ipv4Small.innerHTML = ipv4.ipv4)
             // Push the tasks collection one by one to the list.
             listTasks().then(tasks => tasks.forEach(task => appendTask(task)))
         })
