@@ -61,7 +61,7 @@
             // Get the instance public IP.
             function getIPv4() {
                 return new Promise(resolve => {
-                    fetch(`//${window.location.host}/ipv4`)
+                    fetch(`//${window.location.host}/api/utils/ipv4`)
                         .then(response => {
                             if (!response.ok || response.status !== 200) {
                                 console.error(`getInstancePublicIp error | status ${res.status}`)

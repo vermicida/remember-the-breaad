@@ -3,7 +3,7 @@ from flask import Blueprint
 from requests import get
 from requests.exceptions import RequestException
 
-utils_bp = Blueprint('landing_bp', __name__, template_folder='templates')
+utils_bp = Blueprint('utils_bp', __name__, template_folder='templates')
 
 
 @utils_bp.route('/healthcheck', methods=['GET'])
@@ -14,7 +14,7 @@ def healthcheck():
 @utils_bp.route('/ipv4', methods=['GET'])
 def get_ipv4():
     try:
-        r = get('http://169.254.169.254/latest/meta-data/public-ipv4')
+        r = get('http://169.254.169.254/latest/meta-data/public-ipv4', timeout=3)
     except RequestException:
         ipv4 = 'IP desconocida'
     else:
