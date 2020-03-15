@@ -1,6 +1,6 @@
 # Remember The Bread
 
-Su nombre está inspirado en el gran [Remember The Milk](https://www.rememberthemilk.com/), pero no te dejes engañar, esto es un _to-do list_ más simple que el mecanismo de un chupete. Es una aplicación [Flask](https://palletsprojects.com/p/flask/) que corre sobre [Gunicorn](https://docs.gunicorn.org/en/stable/), y se apoya en [MySQL](https://www.mysql.com/) para la persistencia de los datos.
+Su nombre está inspirado en el gran [Remember The Milk](https://www.rememberthemilk.com/), pero no te dejes engañar, esto es una _to-do list_ más simple que el mecanismo de un chupete. Es una aplicación [Flask](https://palletsprojects.com/p/flask/) que corre sobre [Gunicorn](https://docs.gunicorn.org/en/stable/), y se apoya en [MySQL](https://www.mysql.com/) para la persistencia de los datos.
 
 ## Despliegue en EC2
 
@@ -10,7 +10,7 @@ Esta aplicación se ejecuta en un contenedor [Docker](https://www.docker.com/). 
 $ docker build -t rtb .
 ````
 
-Posteriormente, esta imagen se deberá etiquetar y subir a un repositorio de imágenes que consideremos oportuno y al que instancia de EC2 tenga acceso para su descarga. La buena noticia es que todo esto ya lo hemos hecho por ti, y tienes la imagen disponible en [Docker Hub](https://hub.docker.com/) lista para usar.
+Posteriormente, esta imagen se deberá etiquetar y subir a un repositorio de imágenes que consideremos oportuno y al que la instancia de EC2 tenga acceso para su descarga. La buena noticia es que todo esto ya lo hemos hecho por ti, y tienes la imagen disponible en [Docker Hub](https://hub.docker.com/r/vermicida/rtb) lista para usar.
 
 ```bash
 $ docker pull vermicida/rtb
