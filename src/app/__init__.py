@@ -2,6 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import OperationalError
 
 db = SQLAlchemy()
 ma = Marshmallow()
@@ -28,7 +29,12 @@ def create_app():
         app.register_blueprint(tasks_bp, url_prefix='/api/tasks')
         app.register_blueprint(utils_bp, url_prefix='/api/utils')
 
-        # Create the tables.
-        db.create_all()
-
+        # Create the tables with a crappy way to
+        # handle if they are already created.
+        try:
+            db.create_all()
+        except OperationalError as err:
+            print(err)
+            if err.code != 1050:
+                raise err
         return app
