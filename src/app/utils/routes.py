@@ -14,7 +14,7 @@ def healthcheck():
 @utils_bp.route('/ipv4', methods=['GET'])
 def get_ipv4():
     try:
-        r = get('http://169.254.169.254/latest/meta-data/public-ipv4', timeout=3)
+        r = get('http://169.254.169.254/latest/meta-data/local-ipv4', timeout=3)
     except RequestException:
         ipv4 = 'IP desconocida'
     else:

@@ -25,7 +25,7 @@ Lo siguiente que debemos hacer es crear un secreto en [AWS Secrets Manager](http
 
 **Remember The Bread** lee este secreto al iniciarse y genera la cadena de conexión con la base de datos; la instancia de EC2, por tanto, debe tener un rol asociado que le permita realizar esta acción.
 
-Continuamos creando una nueva intancia de EC2 con **Amazon Linux 2** como sistema operativo y, dado lo poco exigente que es esta aplicación en cuanto a recursos, un tipo **t2.micro** será más que suficiente. Es importante asignar a la instancia una **IPv4 pública** y permitir las peticiones **TCP** entrantes en el puerto **8080**. Por último, configuramos el **User Data** con el siguiente script:
+Continuamos creando una nueva intancia de EC2 con **Amazon Linux 2** como sistema operativo y, dado lo poco exigente que es esta aplicación en cuanto a recursos, un tipo **t2.micro** será más que suficiente. Es importante permitir las peticiones **TCP** entrantes en el puerto **8080**. Por último, configuramos el **User Data** con el siguiente script:
 
 ```bash
 #!/bin/bash
@@ -35,4 +35,4 @@ sudo service docker start
 sudo docker run -d --name rtb -p 8080:8080 vermicida/rtb
 ```
 
-Este script instalará la paquetería de sistema necesaria y levantará la aplicación en el puerto 8080. Solo queda navegar a la IP pública de la instancia para poder usar **Remember The Bread**.
+Este script instalará la paquetería de sistema necesaria y levantará la aplicación en el puerto 8080. Solo queda navegar a la IP o DNS público del Load Balancer para poder usar **Remember The Bread**.
