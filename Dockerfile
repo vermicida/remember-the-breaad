@@ -1,7 +1,7 @@
 # OS base image.
 FROM python:3.6-alpine AS os-base
 RUN apk update && \
-    apk add --no-cache --virtual .build-deps gcc musl-dev libffi-dev && \
+    apk add --no-cache --virtual .build-deps gcc g++ musl-dev libffi-dev && \
     apk add --no-cache mariadb-dev
 
 # Application base image.
