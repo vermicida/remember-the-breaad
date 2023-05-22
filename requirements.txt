@@ -6,4 +6,4 @@ Flask-SQLAlchemy==2.4.1
 gunicorn[eventlet]==20.0.4
 marshmallow-sqlalchemy==0.22.3
 mysqlclient==1.4.6
-requests==2.23.0
+requests==2.31.0
